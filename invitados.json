@@ -1,0 +1,4 @@
+[
+  { "id": 1, "nombre": "Omar Verdin", "mesa": 5, "personas": 3, "llego": 0 },
+  { "id": 2, "nombre": "Juan Perez", "mesa": 2, "personas": 2, "llego": 0 }
+]
