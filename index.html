@@ -8,17 +8,26 @@
   <link rel="manifest" href="manifest.json"> 
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body> 
+   <img src="images/logo.png" class="logo-fixed" onclick="irInicio()">
+  <div id="role-select">
+   
+    <h2>Selecciona modo</h2>
 
-  <div class="container">
-    <img src="images/logo.png" alt="Maribel & Omar" class="logo">
-
-    <input id="search" type="text" placeholder="Buscar invitado..." autofocus>
-
-    <div id="result"></div>
+    <button onclick="setRole('recepcion')">Recepción</button>
+    <button onclick="setRole('planner')">Wedding Planner</button>
   </div>
+  <div id="app">
+    <div class="container">    
 
-<script src="app.js"></script>
+      <input id="search" type="text" placeholder="Buscar invitado..." autofocus>
+
+      <div id="result"></div>
+
+    </div>
+  </div>
+  <script src="app.js"></script>
+
 
 <script>
 if ("serviceWorker" in navigator) {

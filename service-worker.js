@@ -1,4 +1,4 @@
-const CACHE_NAME = "boda-cache-v2";
+const CACHE_NAME = "boda-cache-v3";
 
 self.addEventListener("install", e => {
   e.waitUntil(

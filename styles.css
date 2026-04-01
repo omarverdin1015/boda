@@ -2,6 +2,7 @@ body {
   background: 
     radial-gradient(circle at top, #f5f1e6, #e8dfc8);
   color: #333;
+  padding-top: 60px;
 }
 
 .container {
@@ -9,12 +10,27 @@ body {
   flex-direction: column;
   align-items: center;
 }
-.logo {
-  width: 200px;
-  max-width: 80%;
-  margin: 20px 0;
 
-  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
+#role-select {
+   min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+#role-select h2 {
+  margin-bottom: 20px;
+}
+
+#role-select button {
+  width: 220px;
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
 }
 
 .title {
@@ -26,6 +42,9 @@ body {
   font-size: 28px;
   margin: 10px 0;
   color: #d4af37; /* dorado elegante */
+}
+#app {
+  display: none;
 }
 
 .info {
@@ -81,6 +100,12 @@ h1 {
 
   -webkit-text-fill-color: transparent;
   color: transparent; 
+}
+.logo-fixed {
+  display: block;
+  margin: 20px auto 0;
+  width: 100px;
+  position: static;
 }
 
 .ok { background: green; color: white; }
