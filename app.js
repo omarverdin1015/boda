@@ -40,12 +40,15 @@ searchInput.addEventListener("input", () => {
 function render(inv) {
   resultDiv.innerHTML = `
     <div class="result-card">
-      <h2>Bienvenido</h2>
-      <h1>${inv.nombre}</h1>
-      <p>Mesa ${inv.mesa}</p>
-      <p>${inv.personas} personas</p>
+      <h2 class="title">Bienvenido</h2>
+      <h1 class="name">${inv.nombre}</h1>
 
-      <button class="ok" onclick="checkIn(${inv.id})">Llegó</button>
+      <div class="info">
+        <p>🪑 MESA <strong>${inv.mesa}</strong></p>
+        <p>👥 PERSONAS <strong>${inv.personas}</strong> </p>
+      </div>
+
+      <button class="ok" onclick="checkIn(${inv.id})">Marcar llegada</button>
     </div>
   `;
 }

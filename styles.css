@@ -1,12 +1,45 @@
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #111, #222);
-  color: white;
+  background: 
+    radial-gradient(circle at top, #f5f1e6, #e8dfc8);
+  color: #333;
 }
 
 .container {
-  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.logo {
+  width: 200px;
+  max-width: 80%;
+  margin: 20px 0;
+
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.2));
+}
+
+.title {
+  font-size: 18px;
+  opacity: 0.8;
+}
+
+.name {
+  font-size: 28px;
+  margin: 10px 0;
+  color: #d4af37; /* dorado elegante */
+}
+
+.info {
+  margin: 15px 0;
+}
+
+.info p {
+  margin: 5px 0;
+  font-size: 16px;
+}
+
+button.ok {
+  background: #d4af37; /* dorado */
+  color: white;
 }
 
 input {
@@ -22,6 +55,10 @@ input {
   background: rgba(255,255,255,0.05);
   backdrop-filter: blur(10px);
   border-radius: 15px;
+
+  max-width: 400px;   /* controla el tamaño */
+  margin: 20px auto;  /* centra horizontalmente */
+  padding: 20px;
 }
 
 button {
@@ -33,7 +70,17 @@ button {
   cursor: pointer;
 }
 h1 {
-  color: #d4af37;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  background: linear-gradient(90deg, #d4af37, #f1d77a, #d4af37);
+
+  -webkit-background-clip: text;
+  background-clip: text; 
+
+  -webkit-text-fill-color: transparent;
+  color: transparent; 
 }
 
 .ok { background: green; color: white; }
