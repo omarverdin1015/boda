@@ -7,12 +7,12 @@ const resultDiv = document.getElementById("result");
 
 // 🔥 CARGAR JSON SEGÚN ROL
 function cargarInvitados() {
-  let archivo = "invitados.json";
+  let archivo = " ";
 
   if (role === "recepcion") {
     archivo = "invitados.json";
   } else if (role === "planner") {
-    archivo = "invitados_planner.json";
+    archivo = "invitados-mesa.json";
   }
 
   fetch(archivo)
@@ -31,7 +31,7 @@ function cargarInvitados() {
 }
 
 
-// 🔍 BUSCADOR
+//  BUSCADOR
 searchInput.addEventListener("input", () => {
   const valor = searchInput.value.toLowerCase();
   resultDiv.innerHTML = "";
@@ -42,16 +42,17 @@ searchInput.addEventListener("input", () => {
 
   const resultados = invitados
     .filter(i => i.nombre.toLowerCase().includes(valor))
-    .sort((a, b) => a.llego - b.llego); // 🔥 primero los que no han llegado
-
+    .sort((a, b) => a.llego - b.llego); //  primero los que no han llegado
+   
   if (resultados.length > 0) {
     resultDiv.innerHTML = resultados.map(inv => {
-
-      if (inv.llego === 1) {
+      if (inv.llego === 1 ) {
         return `
-          <div class="result-card arrived">
-            <h1 class="name">${inv.nombre}</h1>
-            <p>✅ Ya registrado</p>
+         <div class="result-card">
+          <h1 class="name">${inv.nombre}</h1>
+          <p>🪑 Mesa ${inv.mesa}</p>
+          <p>👥 ${inv.personas} personas</p>
+          <p>✅ Ya registrado</p>
           </div>
         `;
       }
@@ -77,7 +78,7 @@ searchInput.addEventListener("input", () => {
 });
 
 
-// ✅ CHECK IN
+//  CHECK IN
 function checkIn(id) {
   const invitado = invitados.find(i => i.id === id);
 
@@ -91,7 +92,7 @@ function checkIn(id) {
 }
 
 
-// 🎭 SELECCIÓN DE ROL
+//  SELECCIÓN DE ROL
 function setRole(r) {
   role = r;
   localStorage.setItem("role", r);
@@ -103,7 +104,7 @@ function setRole(r) {
 }
 
 
-// 🔙 REGRESAR AL INICIO
+//  REGRESAR AL INICIO
 function irInicio() {
   localStorage.removeItem("role");
 
@@ -115,7 +116,7 @@ function irInicio() {
 }
 
 
-// 🔄 AL CARGAR
+//  AL CARGAR
 window.onload = () => {
   const savedRole = localStorage.getItem("role");
 
