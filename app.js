@@ -58,7 +58,6 @@ searchInput.addEventListener("input", () => {
         <div class="result-card">
           <h1 class="name">${inv.nombre}</h1>
           <p>🪑 Mesa ${inv.mesa}</p>
-          <p>👥 ${inv.personas} personas</p>
           ${estadoHtml}
           ${botonCheckIn}
           <button style="margin-top: 10px;" onclick="verMesa('${inv.mesa}')">Ver toda la mesa</button>
@@ -95,7 +94,6 @@ function verMesa(numeroMesa) {
         <div class="result-card">
           <h1 class="name">${inv.nombre}</h1>
           <p>🪑 Mesa ${inv.mesa}</p>
-          <p>👥 ${inv.personas} personas</p>
           ${estadoHtml}
           ${botonCheckIn}
         </div>
