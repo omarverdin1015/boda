@@ -1,13 +1,13 @@
 let invitados = [];
 let role = "";
+// Nueva variable para saber si estamos viendo una mesa completa
+let mesaViendoActual = null; 
 
 const searchInput = document.getElementById("search");
 const resultDiv = document.getElementById("result");
 
-
-// 🔥 CARGAR JSON SEGÚN ROL
 function cargarInvitados() {
-  let archivo = " ";
+  let archivo = "";
 
   if (role === "recepcion") {
     archivo = "invitados.json";
@@ -30,36 +30,28 @@ function cargarInvitados() {
     });
 }
 
-
-//  BUSCADOR
+// BUSCADOR PRINCIPAL
 searchInput.addEventListener("input", () => {
-  const valor = searchInput.value.toLowerCase();
+  const valor = searchInput.value.toLowerCase().trim();
   resultDiv.innerHTML = "";
+  
+  // Como estamos buscando texto nuevo, reseteamos la variable de la mesa
+  mesaViendoActual = null;
 
-  if (!valor) return;
-  if (valor.length < 2) return;
-  if (invitados.length === 0) return;
+  if (!valor || valor.length < 2 || invitados.length === 0) return;
 
+  // Solo buscamos coincidencias directas por nombre
   const resultados = invitados
     .filter(i => i.nombre.toLowerCase().includes(valor))
-    .sort((a, b) => a.llego - b.llego); //  primero los que no han llegado
-   
+    .sort((a, b) => a.llego - b.llego);
+    
   if (resultados.length > 0) {
     resultDiv.innerHTML = resultados.map(inv => {
-      if (inv.llego === 1 ) {
-        return `
-         <div class="result-card">
-          <h1 class="name">${inv.nombre}</h1>
-          <p>🪑 Mesa ${inv.mesa}</p>
-          <p>👥 ${inv.personas} personas</p>
-          <p>✅ Ya registrado</p>
-          </div>
-        `;
-      }
-
-      let boton = "";
-      if (role === "recepcion") {
-        boton = `<button class="ok" onclick="checkIn(${inv.id})">Marcar llegada</button>`;
+      let estadoHtml = inv.llego === 1 ? `<p>✅ Ya registrado</p>` : "";
+      
+      let botonCheckIn = "";
+      if (role === "recepcion" && inv.llego === 0) {
+        botonCheckIn = `<button class="ok" onclick="checkIn(${inv.id})">Marcar llegada</button>`;
       }
 
       return `
@@ -67,7 +59,9 @@ searchInput.addEventListener("input", () => {
           <h1 class="name">${inv.nombre}</h1>
           <p>🪑 Mesa ${inv.mesa}</p>
           <p>👥 ${inv.personas} personas</p>
-          ${boton}
+          ${estadoHtml}
+          ${botonCheckIn}
+          <button style="margin-top: 10px;" onclick="verMesa('${inv.mesa}')">Ver toda la mesa</button>
         </div>
       `;
     }).join("");
@@ -77,8 +71,40 @@ searchInput.addEventListener("input", () => {
   }
 });
 
+// NUEVA FUNCIÓN: TRAER A TODOS LOS DE LA MESA
+function verMesa(numeroMesa) {
+  // Guardamos qué mesa estamos viendo para que el Check-In sepa qué refrescar
+  mesaViendoActual = String(numeroMesa).trim();
 
-//  CHECK IN
+  const resultadosMesa = invitados
+    .filter(i => String(i.mesa).trim() === mesaViendoActual)
+    .sort((a, b) => a.llego - b.llego);
+
+  resultDiv.innerHTML = `
+    <h2 style="text-align: center; margin-bottom: 15px;">Mostrando Mesa ${numeroMesa}</h2>
+    ${resultadosMesa.map(inv => {
+      
+      let estadoHtml = inv.llego === 1 ? `<p>✅ Ya registrado</p>` : "";
+      
+      let botonCheckIn = "";
+      if (role === "recepcion" && inv.llego === 0) {
+        botonCheckIn = `<button class="ok" onclick="checkIn(${inv.id})">Marcar llegada</button>`;
+      }
+
+      return `
+        <div class="result-card">
+          <h1 class="name">${inv.nombre}</h1>
+          <p>🪑 Mesa ${inv.mesa}</p>
+          <p>👥 ${inv.personas} personas</p>
+          ${estadoHtml}
+          ${botonCheckIn}
+        </div>
+      `;
+    }).join("")}
+  `;
+}
+
+// CHECK IN ACTUALIZADO
 function checkIn(id) {
   const invitado = invitados.find(i => i.id === id);
 
@@ -86,13 +112,16 @@ function checkIn(id) {
     invitado.llego = 1;
     localStorage.setItem("check_" + id, "1");
 
-    // refrescar resultados
-    searchInput.dispatchEvent(new Event("input"));
+    // Decidir qué vista refrescar
+    if (mesaViendoActual) {
+      verMesa(mesaViendoActual); // Si estábamos viendo la mesa completa, recargamos esa mesa
+    } else {
+      searchInput.dispatchEvent(new Event("input")); // Si estábamos en el buscador normal, recargamos la búsqueda
+    }
   }
 }
 
-
-//  SELECCIÓN DE ROL
+// SELECCIÓN DE ROL
 function setRole(r) {
   role = r;
   localStorage.setItem("role", r);
@@ -100,11 +129,10 @@ function setRole(r) {
   document.getElementById("role-select").style.display = "none";
   document.getElementById("app").style.display = "block";
 
-  cargarInvitados(); // 🔥 IMPORTANTE
+  cargarInvitados();
 }
 
-
-//  REGRESAR AL INICIO
+// REGRESAR AL INICIO
 function irInicio() {
   localStorage.removeItem("role");
 
@@ -113,10 +141,10 @@ function irInicio() {
 
   searchInput.value = "";
   resultDiv.innerHTML = "";
+  mesaViendoActual = null;
 }
 
-
-//  AL CARGAR
+// AL CARGAR
 window.onload = () => {
   const savedRole = localStorage.getItem("role");
 
@@ -126,6 +154,11 @@ window.onload = () => {
     document.getElementById("role-select").style.display = "none";
     document.getElementById("app").style.display = "block";
 
-    cargarInvitados(); // 🔥 IMPORTANTE
+    cargarInvitados();
   }
 };
+
+function borrarMemoria() {
+  localStorage.clear(); // Borra todo el registro de llegadas y roles
+  location.reload();    // Recarga la página automáticamente
+}
