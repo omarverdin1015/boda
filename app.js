@@ -50,9 +50,9 @@ searchInput.addEventListener("input", () => {
       let estadoHtml = inv.llego === 1 ? `<p>✅ Ya registrado</p>` : "";
       
       let botonCheckIn = "";
-      if (role === "recepcion" && inv.llego === 0) {
-        botonCheckIn = `<button class="ok" onclick="checkIn(${inv.id})">Marcar llegada</button>`;
-      }
+      // if (role === "recepcion" && inv.llego === 0) {
+      //   botonCheckIn = `<button class="ok" onclick="checkIn(${inv.id})">Marcar llegada</button>`;
+      // }
 
       return `
         <div class="result-card">
