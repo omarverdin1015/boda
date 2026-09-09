@@ -11,31 +11,86 @@
 <body> 
    <img src="images/logo.png" class="logo-fixed" onclick="irInicio()">
   <div id="role-select">
-   
     <h2>SELECCIONA MODO</h2>
-
     <button onclick="setRole('recepcion')">Recepción</button>
     <button onclick="setRole('planner')">Wedding Planner</button>
   </div>
   <div id="app">
     <div class="container">    
-
       <input id="search" type="text" placeholder="Buscar invitado..." autofocus>
-
       <div id="result"></div>
-
     </div>
   </div>
-  <script src="app.js"></script>
 
-  <button onclick="borrarMemoria()" style="background: red; color: white;">Borrar Memoria (Pruebas)</button>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+  import { getFirestore, collection, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+  
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtGaTI8BHE0CdyByahcN47YuTgZIYc4sg",
+    authDomain: "check-inn-a2026.firebaseapp.com",
+    projectId: "check-inn-a2026",
+    storageBucket: "check-inn-a2026.firebasestorage.app",
+    messagingSenderId: "203693038515",
+    appId: "1:203693038515:web:04d77755e28a950d6b09c6"
+  };
 
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-<script>
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("service-worker.js");
-}
+  // Hacer que las funciones sean globales para que tu app.js las reconozca
+  window.db = db;
+  window.collection = collection;
+  window.onSnapshot = onSnapshot;
+  window.doc = doc;
+  window.updateDoc = updateDoc;
+  
+  console.log("Firebase conectado correctamente");
 </script>
 
+<!-- Tu script va DESPUÉS de Firebase -->
+<script src="app.js"></script>
+
+<!-- SCRIPT TEMPORAL PARA SUBIR DATOS A FIREBASE -->
+<script type="module">
+  // Importamos la función setDoc para escribir documentos nuevos
+  import { doc, setDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+  window.subirInvitados = async function() {
+    try {
+      console.log("Leyendo archivo local...");
+      // 1. Leemos tu archivo invitados.json (Asegúrate de que la ruta sea correcta)
+      const respuesta = await fetch('invitados.json');
+      const invitadosLocal = await respuesta.json();
+
+      console.log(`Subiendo ${invitadosLocal.length} invitados a Firebase...`);
+
+      // 2. Recorremos tu arreglo y los subimos uno por uno
+      for (let inv of invitadosLocal) {
+        // Creamos un documento en la colección "invitados" usando el ID de tu JSON
+        const referencia = doc(window.db, "invitados", inv.id.toString());
+        
+        // Guardamos los datos
+        await setDoc(referencia, inv);
+        console.log(`✅ Subido: ${inv.nombre}`);
+      }
+
+      alert("¡Listo! Todos los invitados están en la nube. Revisa tu consola de Firebase.");
+    } catch (error) {
+      console.error("Hubo un error al subir los datos:", error);
+      alert("Revisa la consola (F12) para ver el error.");
+    }
+  };
+</script>
+
+<!-- BOTÓN TEMPORAL -->
+<button onclick="subirInvitados()" style="background: blue; color: white; padding: 15px; margin: 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">
+  ☁️ Subir JSON a Firebase
+</button>
+
+<button onclick="borrarMemoria()" style="background: red; color: white;">Borrar Memoria (Pruebas)</button>
 </body>
 </html>
