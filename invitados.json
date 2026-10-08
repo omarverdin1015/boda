@@ -17,6 +17,7 @@
 { "id": 16, "nombre": "Carlos Alvarez", "mesa": 2, "personas": 1, "llego": 0 },
 { "id": 17, "nombre": "Karina Alvarez", "mesa": 2, "personas": 1, "llego": 0 },
 { "id": 18, "nombre": "Victoria Romo", "mesa": 2, "personas": 1, "llego": 0 },
+{ "id": 169, "nombre": "Adrian Romo", "mesa": 2, "personas": 1, "llego": 0 },
 { "id": 19, "nombre": "Paulina Alvarez", "mesa": 2, "personas": 1, "llego": 0 },
 { "id": 20, "nombre": "Edardo Guerra", "mesa": 2, "personas": 1, "llego": 0 },
 { "id": 21, "nombre": "Pepe Torres", "mesa": 2, "personas": 1, "llego": 0 },

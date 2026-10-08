@@ -76,7 +76,7 @@ searchInput.addEventListener("input", () => {
         <div class="result-card">
           <h1 class="name">${inv.nombre}</h1>
           <p>🪑 Mesa ${inv.mesa}</p>
-          ${estadoHtml}          
+          ${estadoHtml}      
           <button style="margin-top: 10px;" onclick="verMesa('${inv.mesa}')">Ver toda la mesa</button>
         </div>
       `;
@@ -88,7 +88,7 @@ searchInput.addEventListener("input", () => {
 });
 
 // 3. VER TODA LA MESA
-function verMesa(numeroMesa) {
+window.verMesa = function(numeroMesa) {
   mesaViendoActual = String(numeroMesa).trim();
 
   const resultadosMesa = invitados
@@ -115,23 +115,18 @@ function verMesa(numeroMesa) {
       `;
     }).join("")}
   `;
-}
+};
 
 // 4. CHECK-IN CONECTADO A FIREBASE
 window.checkIn = async function(id) {
   try {
-    // Apuntamos al documento en la colección "invitados"
     const invitadoRef = window.doc(window.db, "invitados", String(id));
 
-    // Actualizamos únicamente el campo llego a 1 en la nube
     await window.updateDoc(invitadoRef, {
       llego: 1
     });
 
     console.log(`Llegada registrada exitosamente en Firebase para ID: ${id}`);
-    // No hace falta actualizar la interfaz manualmente aquí;
-    // Firebase lo detecta y dispara onSnapshot -> refrescarVistaActual() solo.
-
   } catch (error) {
     console.error("Error al hacer check-in en Firebase:", error);
     alert("No se pudo registrar la llegada. Verifica tu conexión a internet.");
@@ -139,7 +134,7 @@ window.checkIn = async function(id) {
 };
 
 // 5. SELECCIÓN DE ROL
-function setRole(r) {
+window.setRole = function(r) {
   role = r;
   localStorage.setItem("role", r);
 
@@ -147,10 +142,10 @@ function setRole(r) {
   document.getElementById("app").style.display = "block";
 
   cargarInvitados();
-}
+};
 
 // 6. REGRESAR AL INICIO
-function irInicio() {
+window.irInicio = function() {
   localStorage.removeItem("role");
 
   document.getElementById("role-select").style.display = "flex";
@@ -159,9 +154,37 @@ function irInicio() {
   searchInput.value = "";
   resultDiv.innerHTML = "";
   mesaViendoActual = null;
-}
+};
 
-// 7. AL CARGAR LA PÁGINA
+// 7. BORRAR MEMORIA Y REINICIAR FIREBASE
+window.borrarMemoria = async function() {
+  const confirmar = confirm("⚠️ ¿Estás seguro de reiniciar los check-ins? Esto pondrá a TODOS los invitados en 'llego: 0' en Firebase y te pedirá seleccionar rol de nuevo.");
+
+  if (!confirmar) return;
+
+  try {
+    console.log("Reiniciando estado de llegada en Firebase...");
+
+    // Recorremos la lista de invitados y ponemos 'llego: 0' a todos usando las instancias globales
+    const promesasReset = invitados.map(inv => {
+      const invitadoRef = window.doc(window.db, "invitados", String(inv.id));
+      return window.updateDoc(invitadoRef, { llego: 0 });
+    });
+
+    await Promise.all(promesasReset);
+
+    localStorage.clear();
+
+    alert("¡Listo! Se reiniciaron todos los registros a 0.");
+    location.reload();
+
+  } catch (error) {
+    console.error("Error al reiniciar la memoria:", error);
+    alert("Hubo un error al reiniciar la base de datos.");
+  }
+};
+
+// 8. AL CARGAR LA PÁGINA
 window.onload = () => {
   const savedRole = localStorage.getItem("role");
 
@@ -174,8 +197,3 @@ window.onload = () => {
     cargarInvitados();
   }
 };
-
-function borrarMemoria() {
-  localStorage.clear();
-  location.reload();
-}
